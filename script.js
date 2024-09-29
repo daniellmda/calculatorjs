@@ -52,24 +52,24 @@ class Calculator {
     this.currentOperand = this.currentOperand.toString().slice(0, -1); // Удаление последнего символа
   }
 
- // Добавление числа или точки в операнд
- appendNumber(number) {
-  // Проверка на добавление более одной точки
-  if (number === '.' && this.currentOperand.includes('.')) return;
-  // Добавление цифры к текущему значению
-  this.currentOperand = this.currentOperand.toString() + number.toString();
-}
-
-// Выбор операции: при этом, если уже есть предыдущий операнд, производим вычисление
-chooseOperation(operation) {
-  // Игнорируем, если текущее значение пустое
-  if (this.currentOperand === '') return;
-
-  // Если выбрана тригонометрическая операция, сразу вычисляем её
-  if (operation === 'sin' || operation === 'cos' || operation === 'tan') {
-    this.computeTrig(operation); // Прямо вычисляем тригонометрическую функцию
-    return;
+  // Добавление числа или точки в операнд
+  appendNumber(number) {
+    // Проверка на добавление более одной точки
+    if (number === '.' && this.currentOperand.includes('.')) return;
+    // Добавление цифры к текущему значению
+    this.currentOperand = this.currentOperand.toString() + number.toString();
   }
+
+  // Выбор операции: при этом, если уже есть предыдущий операнд, производим вычисление
+  chooseOperation(operation) {
+    // Игнорируем, если текущее значение пустое
+    if (this.currentOperand === '') return;
+
+    // Если выбрана тригонометрическая операция, сразу вычисляем её
+    if (operation === 'sin' || operation === 'cos' || operation === 'tan') {
+      this.computeTrig(operation); // Прямо вычисляем тригонометрическую функцию
+      return;
+    }
 
 
     // Логарифмы
@@ -168,7 +168,7 @@ chooseOperation(operation) {
 
   computeLog(operation) {
     const current = parseFloat(this.currentOperand); // Преобразуем текущее значение в число
-  // Проверка на корректность числа для логарифма
+    // Проверка на корректность числа для логарифма
     if (isNaN(current) || current <= 0) {
       alert("Логарифм не может быть вычислен для негативных чисел (и 0)");
       return; // Если число не положительное, выходим
@@ -194,7 +194,7 @@ chooseOperation(operation) {
     this.updateDisplay(); // Обновляем отображение
   }
 
-    // Метод для преобразования в шестнадцатеричную систему
+  // Метод для преобразования в шестнадцатеричную систему
   convertToHex() {
     const current = parseInt(this.currentOperand); // Преобразуем текущее значение в число
     if (isNaN(current)) {
