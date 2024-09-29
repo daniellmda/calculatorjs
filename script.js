@@ -52,21 +52,25 @@ class Calculator {
     this.currentOperand = this.currentOperand.toString().slice(0, -1); // Удаление последнего символа
   }
 
-  // Добавление числа или точки в операнд
-  appendNumber(number) {
-    if (number === '.' && this.currentOperand.includes('.')) return; // Не добавляем более одной точки
-    this.currentOperand = this.currentOperand.toString() + number.toString(); // Добавление цифры
+ // Добавление числа или точки в операнд
+ appendNumber(number) {
+  // Проверка на добавление более одной точки
+  if (number === '.' && this.currentOperand.includes('.')) return;
+  // Добавление цифры к текущему значению
+  this.currentOperand = this.currentOperand.toString() + number.toString();
+}
+
+// Выбор операции: при этом, если уже есть предыдущий операнд, производим вычисление
+chooseOperation(operation) {
+  // Игнорируем, если текущее значение пустое
+  if (this.currentOperand === '') return;
+
+  // Если выбрана тригонометрическая операция, сразу вычисляем её
+  if (operation === 'sin' || operation === 'cos' || operation === 'tan') {
+    this.computeTrig(operation); // Прямо вычисляем тригонометрическую функцию
+    return;
   }
 
-  // Выбор операции: при этом, если уже есть предыдущий операнд, производим вычисление
-  chooseOperation(operation) {
-    if (this.currentOperand === '') return; // Игнорируем, если текущее значение пустое
-
-    // Если выбрана тригонометрическая операция, сразу вычисляем её
-    if (operation === 'sin' || operation === 'cos' || operation === 'tan') {
-      this.computeTrig(operation); // Прямо вычисляем тригонометрическую функцию
-      return;
-    }
 
     // Логарифмы
     if (operation === 'log10' || operation === 'ln' || operation === 'log2') {
@@ -85,15 +89,17 @@ class Calculator {
       this.operation = operation; // Сохраняем выбранную операцию
     }
 
+    // Переносим текущее значение в предыдущее и очищаем текущее
     this.previousOperand = this.currentOperand;
     this.currentOperand = '';
   }
 
+  // Метод для вычисления тригонометрических функций
   computeTrig(operation) {
-    const current = parseFloat(this.currentOperand);
+    const current = parseFloat(this.currentOperand); // Преобразуем текущее значение в число
     if (isNaN(current)) return; // Проверка, что операнд — число
 
-    let computation;
+    let computation; // Переменная для результата
     switch (operation) {
       case 'sin':
         computation = Math.sin(current * (Math.PI / 180)); // Вычисляем синус
@@ -105,7 +111,7 @@ class Calculator {
         computation = Math.tan(current * (Math.PI / 180)); // Вычисляем тангенс
         break;
       default:
-        return;
+        return; // Если операция не найдена, ничего не делаем
     }
 
     this.currentOperand = computation; // Сохраняем результат
@@ -131,7 +137,7 @@ class Calculator {
         break;
       case '÷':
         if (current === 0) {
-          alert("Diviziunea cu zero nu este posibilă");
+          alert("Делить на 0 нельзя");
           return;
         }
         computation = prev / current;
@@ -143,13 +149,13 @@ class Calculator {
         computation = prev * (current / 100); // Процент от предыдущего значения
         break;
       case 'sin':
-        computation = Math.sin(current * (Math.PI / 180)); // Вычисление синуса (угол в градусах)
+        computation = Math.sin(current * (Math.PI / 180)); // Вычисление синуса 
         break;
       case 'cos':
-        computation = Math.cos(current * (Math.PI / 180)); // Вычисление косинуса (угол в градусах)
+        computation = Math.cos(current * (Math.PI / 180)); // Вычисление косинуса 
         break;
       case 'tan':
-        computation = Math.tan(current * (Math.PI / 180)); // Вычисление тангенса (угол в градусах)
+        computation = Math.tan(current * (Math.PI / 180)); // Вычисление тангенса 
         break;
       default:
         return; // Если операция не найдена, ничего не делаем
@@ -161,13 +167,14 @@ class Calculator {
   }
 
   computeLog(operation) {
-    const current = parseFloat(this.currentOperand);
+    const current = parseFloat(this.currentOperand); // Преобразуем текущее значение в число
+  // Проверка на корректность числа для логарифма
     if (isNaN(current) || current <= 0) {
-      alert("Logaritmul nu poate fi calculat pentru numere negative sau zero");
-      return;
+      alert("Логарифм не может быть вычислен для негативных чисел (и 0)");
+      return; // Если число не положительное, выходим
     }
 
-    let computation;
+    let computation; // Переменная для результата
     switch (operation) {
       case 'log10':
         computation = Math.log10(current); // Логарифм по основанию 10
@@ -179,27 +186,31 @@ class Calculator {
         computation = Math.log2(current); // Логарифм по основанию 2
         break;
       default:
-        return;
+        return;  // Если операция не найдена, ничего не делаем
     }
 
-    this.currentOperand = computation;
-    this.readyToReset = true;
-    this.updateDisplay();
+    this.currentOperand = computation; // Сохраняем результат
+    this.readyToReset = true; // Готовы сбросить результат
+    this.updateDisplay(); // Обновляем отображение
   }
 
+    // Метод для преобразования в шестнадцатеричную систему
   convertToHex() {
-    const current = parseInt(this.currentOperand);
+    const current = parseInt(this.currentOperand); // Преобразуем текущее значение в число
     if (isNaN(current)) {
       console.error('Не удалось преобразовать в число:', this.currentOperand);
-      return;
+      return; // Если не удалось преобразовать, выходим
     }
 
-    const hexValue = current.toString(16).toUpperCase().padStart(2, '0');
-    this.currentOperand = hexValue;
+    const hexValue = current.toString(16).toUpperCase().padStart(2, '0'); // Преобразуем в шестнадцатеричное значение
+    this.currentOperand = hexValue; // Сохраняем результат
 
     // Проверка, успешно ли обновилось отображение
-    this.updateDisplay();
-    console.log('После преобразования в шестнадцатеричное:', this.currentOperandTextElement.innerText);
+    if (this.currentOperandTextElement) {
+      this.currentOperandTextElement.innerText = this.currentOperand; // Обновляем отображение
+    } else {
+      console.error('Отсутствует элемент для отображения текущего значения');
+    }
   }
 
 
@@ -230,7 +241,7 @@ class Calculator {
   // Обновление отображения значений в интерфейсе
   updateDisplay() {
     this.currentOperandTextElement.innerText =
-      this.getDisplayNumber(this.currentOperand);
+      this.getDisplayNumber(this.currentOperand); // Обновляем текущее значение
     if (this.operation != null) {
       this.previousOperandTextElement.innerText =
         `${this.getDisplayNumber(this.previousOperand)} ${this.operation}`;
