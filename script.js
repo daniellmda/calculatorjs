@@ -45,10 +45,14 @@ class Calculator {
     this.currentOperand = ''; // Текущее значение (операнд)
     this.previousOperand = ''; // Предыдущее значение
     this.operation = undefined; // Операция
+    this.readyToReset = false; // Сброс флага, чтобы избежать нежелательного удаления цифр
   }
 
   // Удаление последнего символа в текущем операнде
   delete() {
+    if (this.readyToReset) {
+      this.readyToReset = false; // Сбрасываем флаг, чтобы избежать удаления сразу после операции
+    }
     this.currentOperand = this.currentOperand.toString().slice(0, -1); // Удаление последнего символа
   }
 
