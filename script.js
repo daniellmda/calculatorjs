@@ -205,6 +205,7 @@ class Calculator {
       console.error('Не удалось преобразовать в число:', this.currentOperand);
       return; // Если не удалось преобразовать, выходим
     }
+    // Преобразуем в шестнадцатеричное значение, добавляя нули в начало при необходимости
 
     const hexValue = current.toString(16).toUpperCase().padStart(2, '0'); // Преобразуем в шестнадцатеричное значение
     this.currentOperand = hexValue; // Сохраняем результат
@@ -221,14 +222,14 @@ class Calculator {
   // Метод для отображения числа в удобочитаемом формате (с разделением тысяч)
   getDisplayNumber(number) {
     const stringNumber = number.toString();
-    const integerDigits = parseFloat(stringNumber.split('.')[0]); // Целая часть
-    const decimalDigits = stringNumber.split('.')[1]; // Дробная часть
+    const integerDigits = parseFloat(stringNumber.split('.')[0]); // Выделяем Целая часть
+    const decimalDigits = stringNumber.split('.')[1]; // Выделяем Дробная часть
     let integerDisplay;
     if (isNaN(integerDigits)) {
-      integerDisplay = '';
+      integerDisplay = '';  // Если целой части нет, возвращаем пустую строку
     } else {
       integerDisplay = integerDigits.toLocaleString('en', {
-        maximumFractionDigits: 0
+        maximumFractionDigits: 0 // Округляем дробные части для целого числа
       });
     }
 
@@ -298,14 +299,16 @@ const calculator = new Calculator(previousOperandTextElement, currentOperandText
 // Обработчики событий для кнопок чисел
 numberButtons.forEach(button => {
   button.addEventListener('click', () => {
+        // Проверяем флаг сброса перед вводом нового числа
+
     if (calculator.previousOperand === "" &&
       calculator.currentOperand !== "" &&
       calculator.readyToReset) {
-      calculator.currentOperand = "";
-      calculator.readyToReset = false;
+      calculator.currentOperand = ""; // Сбрасываем текущее значение
+      calculator.readyToReset = false; // Сбрасываем флаг
     }
-    calculator.appendNumber(button.innerText);
-    calculator.updateDisplay();
+    calculator.appendNumber(button.innerText); // Добавляем цифру к текущему операнду
+    calculator.updateDisplay();  // Обновляем экран
   })
 })
 
